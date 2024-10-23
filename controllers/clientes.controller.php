@@ -11,13 +11,10 @@ class clientesController
         return;
     }
 
-    public function create()
+    public function create($datos)
     {
-        $json = array(
-            "detalle" => "estas en la vista registro"
-        );
-        echo json_encode($json, true);
-        return;
+        echo "<pre>";
+        print_r($datos);
+        echo "<pre>";
     }
-}
-?>
+}?>

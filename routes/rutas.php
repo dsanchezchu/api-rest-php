@@ -18,8 +18,13 @@ if (count(array_filter($arrayRutas)) == 3) {
     if (count(array_filter($arrayRutas)) == 4) {
         if (array_filter($arrayRutas)[4] == "cursos") {
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "POST") {
+                $datosCursos= array("titulo" => $_POST["titulo"],
+                "descripcion" => $_POST["descripcion"],
+                "instructor" => $_POST["instructor"],
+                "precio" => $_POST["precio"]);
+                
                 $cursos = new cursosController();
-                $cursos->create();
+                $cursos->create($datosCursos);
             }
             else if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "GET"){
                 $cursos = new cursosController();
@@ -33,8 +38,12 @@ if (count(array_filter($arrayRutas)) == 3) {
                 $clientes->index();
             }
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "POST") {
+                $datos= array("nombre" => $_POST["nombre"],
+                "apellido" => $_POST["apellido"],
+                "email" => $_POST["email"]);
+
                 $clientes = new clientesController();
-                $clientes->create();
+                $clientes->create($datos);
             }
         }
     }
