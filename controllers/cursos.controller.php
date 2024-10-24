@@ -9,12 +9,10 @@
             return;
         }
         
-        public function create(){
-            $json = array(
-                "detalle" => "estas en la vista : create" 
-            );
-            echo json_encode($json, true);
-            return;
+        public function create($datosCursos){
+            echo "<pre>";
+            print_r($datosCursos);
+            echo "</pre>";
         }
     }
 ?>
