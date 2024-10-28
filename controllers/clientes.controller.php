@@ -68,6 +68,32 @@ class clientesController
                 return;
             }
         }
+
+        // Generar credenciales
+        $id_cliente= str_replace("$","a",crypt($datos['nombre'].$datos['apellido'].$datos['email'],'$2a$10$dfhghfgrerr234454rd323r32d3'));
+        $llave_secreta= str_replace("$","b",crypt($datos['nombre'].$datos['apellido'].$datos['email'],'$2a$10$dfhghfgrerr234454rd323r32d3'));
+
+        $datos=array(
+            "id_cliente"=>$id_cliente,
+            "llave_secreta"=>$llave_secreta,
+            "nombre"=>$datos['nombre'],
+            "apellido"=>$datos['apellido'],
+            "email"=>$datos['email'],
+            "created_at"=>date("Y-m-d H:i:s"),
+            "updated_at"=>date("Y-m-d H:i:s")
+        );
+
+        $create= clienteModel::create("clientes", $datos);
+        if($create=="ok"){
+            $json=array(
+                "detalle"=>"Cliente registrado correctamente",
+                "Bienvenido "=> $datos['nombre']." ".$datos['apellido'],
+                "id_cliente "=> $id_cliente,
+                "llave_secreta "=> $llave_secreta
+            );
+            echo json_encode($json, true);
+            return;
+        }
     }
 }
 ?>
