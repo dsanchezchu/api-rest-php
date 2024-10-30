@@ -1,27 +1,42 @@
 <?php
-    class cursosController{
-        public function index(){
-            $cursos=cursoModel::index("cursos");
-            $json = array(
-                "detalle" => $cursos,
-            );
-            echo json_encode($json, true);
-            return;
-        }
-        
-        public function create($datosCursos){
-            switch (true) {
-                case (isset($datosCursos['titulo']) && preg_match('/[^a-zA-Z\s]/', $datosCursos['titulo'])):
+class cursosController
+{
+    public function index()
+    {
+
+        // VALIDAR LAS CREDENCIALES
+
+        $clientes = clienteModel::index("clientes");
+        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+            foreach($clientes as $key => $value){
+
+                if(base64_encode($_SERVER['PHP_AUTH_USER'].":".$_SERVER['PHP_AUTH_PW']) == base64_encode($value["id_cliente"].':'.$value["llave_secreta"])){
+                    $cursos = cursoModel::index("cursos");
                     $json = array(
-                        "detalle" => "El titulo contiene caracteres especiales no permitidos"
+                        "status" => "200",
+                        "total_Resgistros" => count($cursos),
+                        "detalle" => $cursos
                     );
                     echo json_encode($json, true);
                     return;
-                default:
-                    break;
+                }
             }
-          
-
+           
         }
     }
+
+    public function create($datosCursos)
+    {
+        switch (true) {
+            case (isset($datosCursos['titulo']) && preg_match('/[^a-zA-Z\s]/', $datosCursos['titulo'])):
+                $json = array(
+                    "detalle" => "El titulo contiene caracteres especiales no permitidos"
+                );
+                echo json_encode($json, true);
+                return;
+            default:
+                break;
+        }
+    }
+}
 ?>
