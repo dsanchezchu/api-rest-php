@@ -6,8 +6,8 @@ $arrayRutas = explode("/", $_SERVER['REQUEST_URI']); //Captura la url
 // echo "<pre>";// En el indice 0 debe ir el localhost, lo cual no lo considera
 
 
-if (count(array_filter($arrayRutas)) == 3) {
-    echo $arrayRutas[3];
+if (count(array_filter($arrayRutas)) == 2) {
+    echo $arrayRutas[2];
     echo "</br>";
     $json = array(
         "detalle" => "no encontrado"
@@ -15,8 +15,8 @@ if (count(array_filter($arrayRutas)) == 3) {
     echo json_encode($json, true);
     return;
 } else {
-    if (count(array_filter($arrayRutas)) == 4) {
-        if (array_filter($arrayRutas)[4] == "cursos") {
+    if (count(array_filter($arrayRutas)) == 3) {
+        if (array_filter($arrayRutas)[3] == "cursos") {
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "POST") {
                 $datosCursos= array("titulo" => $_POST["titulo"],
                 "descripcion" => $_POST["descripcion"],
@@ -32,7 +32,7 @@ if (count(array_filter($arrayRutas)) == 3) {
             }
         }
 
-        if (array_filter($arrayRutas)[4] == "registro") {
+        if (array_filter($arrayRutas)[3] == "registro") {
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "GET") {
                 $clientes = new clientesController();
                 $clientes->index();
