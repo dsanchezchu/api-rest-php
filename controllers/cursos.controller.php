@@ -27,28 +27,7 @@ class cursosController
 
     public function create($datosCursos)
     {
-        switch (true) {
-            case (isset($datosCursos['titulo']) && preg_match('/[^a-zA-Z\s]/', $datosCursos['titulo'])):
-                $json = array(
-                    "detalle" => "El titulo contiene caracteres especiales no permitidos"
-                );
-                echo json_encode($json, true);
-                return;
-            case (isset($datosCursos['descripcion']) && preg_match('/[^a-zA-Z\s]/', $datosCursos['descripcion'])):
-                $json = array(
-                    "detalle" => "La descripcion contiene caracteres especiales no permitidos"
-                );
-                echo json_encode($json, true);
-                return;
-            case (isset($datosCursos['instructor']) && preg_match('/[^a-zA-Z\s]/', $datosCursos['instructor'])):
-                $json = array(
-                "detalle" => "El instructor contiene caracteres especiales no permitidos"
-                );
-                echo json_encode($json, true);
-                return;
-            default:
-                break;
-        }
+       
     }
 }
 ?>

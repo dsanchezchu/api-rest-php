@@ -18,13 +18,7 @@ if (count(array_filter($arrayRutas)) == 2) {
     if (count(array_filter($arrayRutas)) == 3) {
         if (array_filter($arrayRutas)[3] == "cursos") {
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "POST") {
-                $datosCursos= array("titulo" => $_POST["titulo"],
-                "descripcion" => $_POST["descripcion"],
-                "instructor" => $_POST["instructor"],
-                "precio" => $_POST["precio"]);
-                
-                $cursos = new cursosController();
-                $cursos->create($datosCursos);
+              
             }
             else if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "GET"){
                 $cursos = new cursosController();
