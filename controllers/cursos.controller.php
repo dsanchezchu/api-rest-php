@@ -8,7 +8,7 @@ class cursosController
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             foreach ($clientes as $key => $value) {
                 if (base64_encode($_SERVER['PHP_AUTH_USER'] . ":" . $_SERVER['PHP_AUTH_PW']) == base64_encode($value["id_cliente"] . ':' . $value["llave_secreta"])) {
-                    $cursos = cursoModel::index("cursos");
+                    $cursos = cursoModel::index("cursos","clientes");
                     $json = array(
                         "status" => "200",
                         "total_Resgistros" => count($cursos),
@@ -154,7 +154,7 @@ class cursosController
                     base64_encode($value["id_cliente"] . ':' . $value["llave_secreta"])
                 ) {
 
-                    $curso = cursoModel::show("cursos", $id);
+                    $curso = cursoModel::show("cursos","clientes", $id);
 
                     if ($curso) {
                         $json = array(
@@ -202,7 +202,7 @@ class cursosController
                         }
                     }
                     // Validar id de creador para que solo es pueda actualizar
-                    $curso = cursoModel::show("cursos", $id);
+                    $curso = cursoModel::show("cursos", "clientes",$id);
                     foreach ($curso as $key => $valuecurso) {
                         if ($valuecurso->id_creador == $valueCliente["id"]) {
                             // Llevar datos verificados al modelo
@@ -250,7 +250,7 @@ class cursosController
                     base64_encode($valueCliente["id_cliente"] . ':' . $valueCliente["llave_secreta"])
                 ) {
                     // Validad id creador
-                    $curso = cursoModel::show("cursos", $id);
+                    $curso = cursoModel::show("cursos","clientes", $id);
                     foreach ($curso as $key => $valueCurso) {
                         if ($valueCurso->id_creador == $valueCliente["id"]) {
                             // Llevar datos al modelo
