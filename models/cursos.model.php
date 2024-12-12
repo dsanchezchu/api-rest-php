@@ -37,7 +37,42 @@ class cursoModel{
 		$stmt = null;
 
     }
+    static public function show($tabla, $id){
+        $stmt = conexion::conectar()->prepare("SELECT * FROM $tabla WHERE id = :id");
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_CLASS);
+        $stmt->close();
+        $stmt = null;
+    }
 
+    static public function update($tabla, $datoUpdt){
+
+        $stmt=Conexion::conectar()->prepare("UPDATE cursos SET titulo=:titulo,descripcion=:descripcion,instructor=:instructor,imagen=:imagen,precio=:precio,updated_at=:updated_at WHERE id=:id");
+
+
+        $stmt -> bindParam(":id", $datoUpdt["id"], PDO::PARAM_STR);
+        $stmt -> bindParam(":titulo", $datoUpdt["titulo"], PDO::PARAM_STR);
+		$stmt -> bindParam(":descripcion", $datoUpdt["descripcion"], PDO::PARAM_STR);
+		$stmt -> bindParam(":instructor", $datoUpdt["instructor"], PDO::PARAM_STR);
+		$stmt -> bindParam(":imagen", $datoUpdt["imagen"], PDO::PARAM_STR);
+		$stmt -> bindParam(":precio", $datoUpdt["precio"], PDO::PARAM_STR);
+		$stmt -> bindParam(":updated_at", $datoUpdt["updated_at"], PDO::PARAM_STR);
+
+        if($stmt -> execute()){
+
+			return "ok";
+
+		}else{
+
+			print_r(conexion::conectar()->errorInfo());
+		}
+
+		$stmt-> close();
+
+		$stmt = null;
+
+    }
 
 }
 ?>

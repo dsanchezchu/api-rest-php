@@ -15,8 +15,23 @@ if (count(array_filter($arrayRutas)) == 2) {
     echo json_encode($json, true);
     return;
 } else {
-    if (count(array_filter($arrayRutas)) == 3) {
+    if (count(array_filter($arrayRutas)) == 4) {
         if (array_filter($arrayRutas)[3] == "cursos") {
+           
+          if(isset(array_filter($arrayRutas)[3]) && is_numeric(array_filter($arrayRutas)[4])){
+            if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "GET"){
+                $cursos = new cursosController();
+                $cursos->show(array_filter($arrayRutas)[4]);
+            }
+            if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "PUT"){
+                // Capturar datos
+
+                $datoUpdt= array();
+                parse_str(file_get_contents("php://input"), $datoUpdt);
+                $editaCurso = new cursosController();
+                $editaCurso->update(array_filter($arrayRutas)[4],$datoUpdt);
+            }
+        } else {
             if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "POST" ){
 
            
@@ -42,6 +57,7 @@ if (count(array_filter($arrayRutas)) == 2) {
               $cursos->index(null);
 
           }
+        }
         }
 
         if (array_filter($arrayRutas)[3] == "registro") {

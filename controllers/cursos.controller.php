@@ -142,5 +142,99 @@ class cursosController
         return;
 
     }
+
+    public function show($id)
+    {
+        // Validar las credenciales
+        $clientes = clienteModel::index("clientes");
+        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+            foreach ($clientes as $key => $value) {
+                if (
+                    base64_encode($_SERVER['PHP_AUTH_USER'] . ":" . $_SERVER['PHP_AUTH_PW']) ==
+                    base64_encode($value["id_cliente"] . ':' . $value["llave_secreta"])
+                ) {
+
+                    $curso = cursoModel::show("cursos", $id);
+
+                    if ($curso) {
+                        $json = array(
+                            "status" => 200,
+                            "detalle" => $curso
+                        );
+                    } else {
+                        $json = array(
+                            "status" => 404,
+                            "detalle" => "No se encontró el curso solicitado"
+                        );
+                    }
+
+                    echo json_encode($json, true);
+                    return;
+                }
+            }
+        }
+    }
+
+    public function update($id, $datoUpdt)
+    {
+        // Validar datos de cliente
+        $clientes = clienteModel::index("clientes");
+        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+            foreach ($clientes as $key => $valueCliente) {
+				if( "Basic ".base64_encode($_SERVER['PHP_AUTH_USER'].":".$_SERVER['PHP_AUTH_PW']) == 
+					"Basic ".base64_encode($valueCliente["id_cliente"].":".$valueCliente["llave_secreta"]) ){
+                    // Validaciom de datos
+                    foreach ($datoUpdt as $key => $valueDatos) {
+                        if (isset($valueDatos) && !preg_match('/^[(\\)\\=\\&\\$\\;\\-\\_\\*\\"\\<\\>\\?\\¿\\!\\¡\\:\\,\\.\\0-9a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$/', $valueDatos)) {
+
+                            $json = array(
+
+                                "status" => 404,
+                                "detalle" => "Error en el campo " . $key
+
+                            );
+
+                            echo json_encode($json, true);
+
+                            return;
+                        }
+                    }
+                    // Validar id de creador para que solo es pueda actualizar
+                    $curso = cursoModel::show("cursos", $id);
+                    foreach ($curso as $key => $valuecurso) {
+                        if ($valuecurso->id_creador == $valueCliente["id"]) {
+                            // Llevar datos verificados al modelo
+                            $datoUpdt = array(
+                                "id" => $id,
+                                "titulo" => $datoUpdt["titulo"],
+                                "descripcion" => $datoUpdt["descripcion"],
+                                "instructor" => $datoUpdt["instructor"],
+                                "imagen" => $datoUpdt["imagen"],
+                                "precio" => $datoUpdt["precio"],
+                                "updated_at" => date('Y-m-d h:i:s')
+                            );
+
+                            $update = cursoModel::update("cursos", $datoUpdt);
+
+                            if ($update == "ok") {
+                                $json = array(
+                                    "status" => 200,
+                                    "detalle" => "Actualizado el curso de id" . $id . ", Ahora los nuevos datoUpdt son \n" . $update
+                                );
+                            } else {
+                                $json = array(
+                                    "status" => 404,
+                                    "detalle" => "No se puedo actualizar el curso"
+                                );
+                            }
+
+                            echo json_encode($json, true);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 ?>
