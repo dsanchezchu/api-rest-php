@@ -181,8 +181,10 @@ class cursosController
         $clientes = clienteModel::index("clientes");
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             foreach ($clientes as $key => $valueCliente) {
-				if( "Basic ".base64_encode($_SERVER['PHP_AUTH_USER'].":".$_SERVER['PHP_AUTH_PW']) == 
-					"Basic ".base64_encode($valueCliente["id_cliente"].":".$valueCliente["llave_secreta"]) ){
+                if (
+                    "Basic " . base64_encode($_SERVER['PHP_AUTH_USER'] . ":" . $_SERVER['PHP_AUTH_PW']) ==
+                    "Basic " . base64_encode($valueCliente["id_cliente"] . ":" . $valueCliente["llave_secreta"])
+                ) {
                     // Validaciom de datos
                     foreach ($datoUpdt as $key => $valueDatos) {
                         if (isset($valueDatos) && !preg_match('/^[(\\)\\=\\&\\$\\;\\-\\_\\*\\"\\<\\>\\?\\¿\\!\\¡\\:\\,\\.\\0-9a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$/', $valueDatos)) {
@@ -230,6 +232,38 @@ class cursosController
 
                             echo json_encode($json, true);
                             return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function delete($id)
+    {
+        // Validar credenciales del cliente
+        $clientes = clienteModel::index("clientes");
+        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+            foreach ($clientes as $key => $valueCliente) {
+                if (
+                    base64_encode($_SERVER['PHP_AUTH_USER'] . ":" . $_SERVER['PHP_AUTH_PW']) ==
+                    base64_encode($valueCliente["id_cliente"] . ':' . $valueCliente["llave_secreta"])
+                ) {
+                    // Validad id creador
+                    $curso = cursoModel::show("cursos", $id);
+                    foreach ($curso as $key => $valueCurso) {
+                        if ($valueCurso->id_creador == $valueCliente["id"]) {
+                            // Llevar datos al modelo
+                            $delete = cursoModel::delete("cursos", $id);
+                            if ($delete == "ok") {
+                                $json = array(
+                                    "status" => 200,
+                                    "detalle" => "Se borro el curso con exito"
+                                );
+                                echo json_encode($json, true);
+
+                                return;
+                            }
                         }
                     }
                 }

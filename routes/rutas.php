@@ -25,11 +25,14 @@ if (count(array_filter($arrayRutas)) == 2) {
             }
             if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "PUT"){
                 // Capturar datos
-
                 $datoUpdt= array();
                 parse_str(file_get_contents("php://input"), $datoUpdt);
                 $editaCurso = new cursosController();
                 $editaCurso->update(array_filter($arrayRutas)[4],$datoUpdt);
+            }
+            if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "DELETE"){
+                $borrarCurso=new cursosController();
+                $borrarCurso->delete(array_filter($arrayRutas)[4]);
             }
         } else {
             if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "POST" ){
