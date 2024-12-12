@@ -1,14 +1,21 @@
 <?php
 class cursosController
 {
-    public function index()
+    public function index($pagina)
     {
         // VALIDAR LAS CREDENCIALES
         $clientes = clienteModel::index("clientes");
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             foreach ($clientes as $key => $value) {
                 if (base64_encode($_SERVER['PHP_AUTH_USER'] . ":" . $_SERVER['PHP_AUTH_PW']) == base64_encode($value["id_cliente"] . ':' . $value["llave_secreta"])) {
-                    $cursos = cursoModel::index("cursos","clientes");
+                    if($pagina != null){
+                        $cantidad = 10;
+                        $desde=($pagina-1)*$cantidad;
+                        
+                        $cursos= cursoModel::index("cursos","clientes",$cantidad,$desde);
+                    }else{
+                        $cursos= cursoModel::index("cursos","clientes",null,null);
+                    }
                     $json = array(
                         "status" => "200",
                         "total_Resgistros" => count($cursos),
